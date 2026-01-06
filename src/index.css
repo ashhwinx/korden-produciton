@@ -1,0 +1,69 @@
+/* 1. Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap');
+
+/* 2. Tailwind Import */
+@import "tailwindcss";
+
+/* 3. Theme Configuration */
+@theme {
+  /* Maine 'Syne' ko lowercase kiya hai taaki class 'font-syne' ban sake */
+  --font-outfit: "Outfit", sans-serif;
+  --font-space: "Space Grotesk", sans-serif;
+  --font-syne: "Syne", sans-serif;
+}
+
+/* --- LENIS SCROLL CSS START --- */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+/* --- LENIS SCROLL CSS END --- */
+
+/* 4. Base Styles */
+body {
+  font-family: var(--font-outfit);
+  background: radial-gradient(circle at 50% -10%, #1a0b2e 0%, #050505 40%, #000000 100%);
+  background-attachment: fixed;
+  color: #f8fafc;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* 5. Cursor Logic (Desktop Only) */
+@media (min-width: 1024px) {
+  * {
+    cursor: none !important;
+  }
+}
+
+/* IMPORTANT FIX:
+   Maine yahan se `h1, h2, h3... { font-family: Space Grotesk }` wala rule hata diya hai.
+   Wo rule zabardasti 'Syne' font ko override kar raha tha.
+   Ab aap jahan bhi 'font-space' likhenge wahan Space Grotesk aayega,
+   aur jahan 'font-syne' likhenge wahan Syne aayega.
+*/
+
+/* 6. Custom Utilities */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.text-outline {
+  -webkit-text-stroke: 1px rgba(245, 158, 11, 0.4);
+  color: transparent;
+}
