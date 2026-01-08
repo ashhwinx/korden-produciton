@@ -1,20 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 const CustomCursor: React.FC = () => {
-  const cursorRef = useRef<HTMLDivElement>(null); // The Dot
-  const followerRef = useRef<HTMLDivElement>(null); // The Ring
+  // Movement Refs (Outer Containers)
+  const cursorRef = useRef<HTMLDivElement>(null); 
+  const followerRef = useRef<HTMLDivElement>(null); 
   
+  // Scaling Refs (Inner Visuals) - Fix for the Jumping bug
+  const dotInnerRef = useRef<HTMLDivElement>(null);
+  const followerInnerRef = useRef<HTMLDivElement>(null);
+
   const [isMobile, setIsMobile] = useState(true); 
 
-  // Store coordinates (No State = No Re-renders)
+  // Store coordinates
   const mouse = useRef({ x: -100, y: -100 }); 
   const followerPos = useRef({ x: -100, y: -100 });
 
   useEffect(() => {
-    // 1. Mobile Detection Logic
     const checkMobile = () => {
       const isTouch = window.matchMedia("(pointer: coarse)").matches;
-      // Slightly larger breakpoint to be safe
       const isSmallScreen = window.innerWidth < 1024;
       setIsMobile(isTouch || isSmallScreen);
     };
@@ -27,50 +30,41 @@ const CustomCursor: React.FC = () => {
   useEffect(() => {
     if (isMobile) return;
 
-    // Initial Position off-screen to prevent flash
-    mouse.current = { x: -100, y: -100 };
-    followerPos.current = { x: -100, y: -100 };
-
-    // --- OPTIMIZED EVENT HANDLERS (No React State) ---
-
     const handleMouseMove = (e: MouseEvent) => {
       mouse.current = { x: e.clientX, y: e.clientY };
       
-      // Move Dot Instantly (Hardware Accelerated)
+      // Outer div handles POSITION
       if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+        cursorRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
       }
     };
 
     const handleMouseDown = () => {
-      if (cursorRef.current) cursorRef.current.classList.add('scale-75');
-      if (followerRef.current) followerRef.current.classList.add('scale-90');
+      // Inner div handles SCALE
+      if (dotInnerRef.current) dotInnerRef.current.classList.add('scale-click');
+      if (followerInnerRef.current) followerInnerRef.current.classList.add('scale-click-follower');
     };
 
     const handleMouseUp = () => {
-      if (cursorRef.current) cursorRef.current.classList.remove('scale-75');
-      if (followerRef.current) followerRef.current.classList.remove('scale-90');
+      if (dotInnerRef.current) dotInnerRef.current.classList.remove('scale-click');
+      if (followerInnerRef.current) followerInnerRef.current.classList.remove('scale-click-follower');
     };
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      
-      // Performance: Check tags first (fastest), then check closest (slower)
       const isInteractive = 
         target.tagName === 'A' || 
         target.tagName === 'BUTTON' || 
         target.tagName === 'INPUT' || 
-        target.tagName === 'TEXTAREA' ||
-        target.tagName === 'SELECT' ||
-        target.closest('.cursor-pointer') || // Use a class utility if needed
+        target.closest('.cursor-pointer') || 
         target.closest('a') || 
         target.closest('button');
 
-      if (followerRef.current) {
+      if (followerInnerRef.current) {
         if (isInteractive) {
-            followerRef.current.classList.add('hover-active');
+          followerInnerRef.current.classList.add('hover-active');
         } else {
-            followerRef.current.classList.remove('hover-active');
+          followerInnerRef.current.classList.remove('hover-active');
         }
       }
     };
@@ -80,18 +74,15 @@ const CustomCursor: React.FC = () => {
     window.addEventListener('mouseup', handleMouseUp);
     window.addEventListener('mouseover', handleMouseOver);
 
-    // --- ANIMATION LOOP (The Heart of Smoothness) ---
     let animationFrameId: number;
-
     const animate = () => {
-      // Smooth LERP (Linear Interpolation)
-      const ease = 0.12; // Adjusted for snappier feel
-      
+      const ease = 0.12; 
       followerPos.current.x += (mouse.current.x - followerPos.current.x) * ease;
       followerPos.current.y += (mouse.current.y - followerPos.current.y) * ease;
 
       if (followerRef.current) {
-        followerRef.current.style.transform = `translate3d(${followerPos.current.x}px, ${followerPos.current.y}px, 0) translate(-50%, -50%)`;
+        // Outer ring handles POSITION
+        followerRef.current.style.transform = `translate3d(${followerPos.current.x}px, ${followerPos.current.y}px, 0)`;
       }
 
       animationFrameId = requestAnimationFrame(animate);
@@ -113,24 +104,48 @@ const CustomCursor: React.FC = () => {
   return (
     <>
       <style>{`
-        /* CSS Optimization for GPU transitions */
-        .cursor-dot {
+        .cursor-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            will-change: transform;
+        }
+        
+        /* Inner elements handle the visual appearance and scaling */
+        .cursor-dot-inner {
             width: 10px;
             height: 10px;
-            transition: width 0.2s, height 0.2s, background-color 0.2s;
+            background-color: #f59e0b; /* Amber 500 */
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
+            transform: translate(-50%, -50%); /* Keeps it centered */
+            transition: transform 0.2s ease, background-color 0.2s;
         }
-        .cursor-follower {
+
+        .cursor-follower-inner {
             width: 32px;
             height: 32px;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            border-radius: 50%;
             background-color: transparent;
-            border-color: rgba(168, 85, 247, 0.4);
+            transform: translate(-50%, -50%); /* Keeps it centered */
             transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
                         height 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
                         background-color 0.3s, 
-                        border-color 0.3s;
+                        border-color 0.3s,
+                        transform 0.3s ease;
         }
         
-        /* Interactive States handled via Classes */
+        /* Scaling logic separated from movement */
+        .scale-click { 
+            transform: translate(-50%, -50%) scale(0.75) !important; 
+        }
+        .scale-click-follower { 
+            transform: translate(-50%, -50%) scale(0.9) !important; 
+        }
+
         .hover-active {
             width: 64px !important;
             height: 64px !important;
@@ -139,17 +154,15 @@ const CustomCursor: React.FC = () => {
         }
       `}</style>
 
-      {/* 1. Main Dot (Amber) */}
-      <div 
-        ref={cursorRef}
-        className="cursor-dot fixed top-0 left-0 pointer-events-none z-[9999] rounded-full mix-blend-screen bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)] will-change-transform"
-      />
+      {/* 1. Main Dot */}
+      <div ref={cursorRef} className="cursor-wrapper">
+        <div ref={dotInnerRef} className="cursor-dot-inner" />
+      </div>
       
-      {/* 2. Follower Ring (Purple) */}
-      <div 
-        ref={followerRef}
-        className="cursor-follower fixed top-0 left-0 pointer-events-none z-[9998] rounded-full border border-purple-500/60 will-change-transform"
-      />
+      {/* 2. Follower Ring */}
+      <div ref={followerRef} className="cursor-wrapper" style={{ zIndex: 9998 }}>
+        <div ref={followerInnerRef} className="cursor-follower-inner" />
+      </div>
     </>
   );
 };
