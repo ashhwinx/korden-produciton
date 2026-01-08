@@ -4,24 +4,27 @@ import { COMPANY_INFO } from '../constants';
 import { Mail, Phone, Check, Copy, MessageCircle, ArrowUpRight, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// --- ANIMATION VARIANTS (For Staggered Effect) ---
-const containerVariants = {
+// --- IMPORTANT TYPE FIX ---
+import type { Variants } from 'framer-motion';
+
+// --- ANIMATION VARIANTS (Fixed with explicit Types) ---
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15, // Har item 0.15s ke baad aayega
+      staggerChildren: 0.15,
       delayChildren: 0.2
     }
   }
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { y: 30, opacity: 0 },
   visible: { 
     y: 0, 
     opacity: 1,
-    transition: { type: "spring", stiffness: 80, damping: 15 } // Spring physics for smoothness
+    transition: { type: "spring", stiffness: 80, damping: 15 }
   }
 };
 
@@ -35,7 +38,6 @@ interface ActionCardProps {
   isMap?: boolean;
 }
 
-// 1. ACTION CARD (Memoized for Performance)
 const ActionCard: React.FC<ActionCardProps> = React.memo(({ label, value, icon: Icon, href, isMap }) => {
   const [copied, setCopied] = useState(false);
 
@@ -111,7 +113,6 @@ const ActionCard: React.FC<ActionCardProps> = React.memo(({ label, value, icon: 
   );
 });
 
-// 2. WHATSAPP HERO (Optimized)
 const WhatsAppHero = React.memo(() => (
   <motion.a
     href={`https://wa.me/${COMPANY_INFO.whatsapp.replace(/[^0-9]/g, '')}`}
@@ -122,13 +123,11 @@ const WhatsAppHero = React.memo(() => (
     whileHover={{ scale: 1.01, boxShadow: "0 20px 60px -15px rgba(37,211,102,0.4)" }}
     whileTap={{ scale: 0.99 }}
   >
-      {/* Background Decor */}
       <div className="absolute -right-20 -top-20 text-white/10 rotate-12 transform group-hover:rotate-0 transition-transform duration-700 ease-out pointer-events-none">
           <MessageCircle size={350} fill="currentColor" />
       </div>
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay pointer-events-none"></div>
 
-      {/* Left Content */}
       <div className="relative z-10 flex flex-col items-start gap-6">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-black/20 backdrop-blur-md rounded-full border border-white/10 shadow-lg">
               <span className="relative flex h-3 w-3">
@@ -143,15 +142,12 @@ const WhatsAppHero = React.memo(() => (
                   Chat on WhatsApp
               </h3>
               <p className="text-white/90 text-lg font-medium max-w-md leading-relaxed">
-              Skip the email
-backlog. Connect directly with a Sourcing Lead to fast-track your
-quote and lock in stock availability <br/>
+              Skip the email backlog. Connect directly with a Sourcing Lead to fast-track your quote and lock in stock availability <br/>
                   <span className="opacity-75 text-sm">Typical response time: Under 5 minutes.</span>
               </p>
           </div>
       </div>
 
-      {/* Right Action Button */}
       <div className="relative z-10">
           <div className="w-20 h-20 md:w-24 md:h-24 bg-white text-[#075E54] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-2xl">
               <ArrowUpRight size={40} strokeWidth={2.5} />
@@ -160,17 +156,14 @@ quote and lock in stock availability <br/>
   </motion.a>
 ));
 
-// --- MAIN PAGE ---
-
 const Contact: React.FC = () => {
   const locationText = "Mumbai, Maharashtra, India";
-  // Standard Google Maps Search Link
+  // Fixed Google Maps URL Syntax
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationText)}`;
 
   return (
     <div className="min-h-screen pt-32 pb-20 px-4 bg-[#020005] relative overflow-hidden flex flex-col justify-center">
       
-      {/* Background Decor (Static) */}
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-amber-900/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-900/5 blur-[120px] rounded-full pointer-events-none" />
 
@@ -181,17 +174,13 @@ const Contact: React.FC = () => {
         variants={containerVariants}
       >
         
-        {/* TITLE */}
         <motion.div className="mb-16 text-center" variants={itemVariants}>
             <SectionTitle title="Initiate Transmission" subtitle="Get in Touch" />
         </motion.div>
 
         <div className="flex flex-col gap-6">
-          
-          {/* 1. WHATSAPP HERO */}
           <WhatsAppHero />
 
-          {/* 2. SECONDARY CONTACT GRID */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <ActionCard 
                 label="Direct Line" 
@@ -200,15 +189,13 @@ const Contact: React.FC = () => {
                 href={`tel:${COMPANY_INFO.phone}`}
               />
               <ActionCard 
-                label="SUBMIT BILL OF
-                MATERIALS (BOM)" 
+                label="SUBMIT BILL OF MATERIALS (BOM)" 
                 value={COMPANY_INFO.email} 
                 icon={Mail} 
                 href={`mailto:${COMPANY_INFO.email}`}
               />
           </div>
 
-          {/* Location */}
           <div className="grid grid-cols-1">
               <ActionCard 
                 label="HQ Location" 
@@ -218,10 +205,8 @@ const Contact: React.FC = () => {
                 isMap={true}
               />
           </div>
-
         </div>
 
-        {/* Footer Note */}
         <motion.p 
           className="text-center text-slate-500 text-sm mt-12 font-['Space_Grotesk']"
           variants={itemVariants}

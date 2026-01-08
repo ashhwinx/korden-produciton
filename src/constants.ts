@@ -4,7 +4,7 @@ import { Cpu, Factory, Globe, Zap, Microchip, Layers, Wifi, Battery, Search } fr
 
 export const COMPANY_INFO = {
   name: "Korden Technologies",
-  address: ": B/2402, 24th Floor, Tulsi Tower, M.G road, Goregaon West, Mumbai, Maharashtra 400104",
+  address: "B/2402, 24th Floor, Tulsi Tower, M.G road, Goregaon West, Mumbai, Maharashtra 400104",
   email: "sales@korden.tech",
   phone: "+91 98765 43210",
   whatsapp: "+91 84529 88088",

@@ -1,9 +1,15 @@
 import React, { useEffect, useRef, useState, useLayoutEffect } from 'react';
 import { SectionTitle } from '../components/UI';
-import { COMPANY_INFO } from '../constants';
-import { Target, TrendingUp, Users, Globe, Zap, ShieldCheck } from 'lucide-react';
+import { Target, Users, Globe, Zap, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion'; // Importing Framer Motion
+import { motion } from 'framer-motion';
+import type { Variants } from 'framer-motion';
+
+// --- GSAP IMPORTS FOR PARALLAX & STATS ---
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // --- TYPES ---
 interface ValueCardProps {
@@ -46,7 +52,7 @@ const StatItem: React.FC<{ label: string; value: string; suffix?: string }> = Re
    </div>
 ));
 
-// --- OPTIMIZED SCHEMATIC GRID (Same Performance Logic) ---
+// --- OPTIMIZED SCHEMATIC GRID ---
 const SchematicGridBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cellsRef = useRef<Cell[]>([]); 
@@ -128,10 +134,8 @@ const SchematicGridBackground: React.FC = () => {
             const dx = mouse.x - cell.x;
             const dy = mouse.y - cell.y;
             const distSq = dx*dx + dy*dy;
-            let active = false;
             
             if (distSq < MOUSE_RADIUS_SQ) {
-                active = true;
                 const dist = Math.sqrt(distSq);
                 const intensity = 1 - (dist / MOUSE_RADIUS);
                 cell.opacity = 0.1 + (intensity * 0.8);
@@ -149,20 +153,18 @@ const SchematicGridBackground: React.FC = () => {
             ctx.rotate(cell.rotation);
             ctx.scale(cell.scale, cell.scale);
             
-            if (active) {
-                 ctx.strokeStyle = `rgba(245, 158, 11, ${cell.opacity})`;
-                 ctx.lineWidth = 1.5;
-            } else {
-                 ctx.strokeStyle = `rgba(255, 255, 255, ${cell.opacity})`;
-                 ctx.lineWidth = 1;
-            }
+            ctx.strokeStyle = distSq < MOUSE_RADIUS_SQ 
+              ? `rgba(245, 158, 11, ${cell.opacity})` 
+              : `rgba(255, 255, 255, ${cell.opacity})`;
+            ctx.lineWidth = distSq < MOUSE_RADIUS_SQ ? 1.5 : 1;
+            
             drawShape(ctx, cell.type, CELL_SIZE * 0.6);
             ctx.restore();
         }
         animationId = requestAnimationFrame(animate);
     };
 
-    let resizeTimeout: NodeJS.Timeout;
+    let resizeTimeout: any;
     const handleResize = () => { clearTimeout(resizeTimeout); resizeTimeout = setTimeout(init, 200); };
     const handleMouseMove = (e: MouseEvent) => { const rect = canvas.getBoundingClientRect(); mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top; };
     const handleMouseLeave = () => { mouse.x = -1000; mouse.y = -1000; };
@@ -187,19 +189,18 @@ const SchematicGridBackground: React.FC = () => {
 const About: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Framer Motion Variants (Simple & Reliable)
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15, // Delay between each text element
+        staggerChildren: 0.15,
         delayChildren: 0.2
       }
     }
   };
 
-  const textVariants = {
+  const textVariants: Variants = {
     hidden: { y: 40, opacity: 0 },
     visible: { 
       y: 0, 
@@ -213,16 +214,9 @@ const About: React.FC = () => {
     }
   };
 
-  // Keep GSAP ONLY for Scroll Effects (Parallax & Stats)
   useLayoutEffect(() => {
-    // @ts-ignore
-    if(!window.gsap || !window.ScrollTrigger) return;
-    
-    // @ts-ignore
-    const ctx = window.gsap.context(() => {
-        // Image Parallax
-        // @ts-ignore
-        window.gsap.to(".about-image", {
+    const ctx = gsap.context(() => {
+        gsap.to(".about-image", {
             scrollTrigger: {
                 trigger: ".about-image-container",
                 start: "top bottom",
@@ -234,9 +228,7 @@ const About: React.FC = () => {
             force3D: true
         });
         
-        // Stats Count up
-        // @ts-ignore
-        window.gsap.from(".stat-strip", {
+        gsap.from(".stat-strip", {
             scrollTrigger: {
                trigger: ".stat-strip",
                start: "top 85%"
@@ -253,7 +245,6 @@ const About: React.FC = () => {
 
   return (
     <div ref={containerRef} className="bg-[#020005] min-h-screen pt-32 pb-20 relative overflow-hidden">
-       {/* Background Elements */}
        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-900/10 blur-[120px] rounded-full pointer-events-none translate-z-0" />
        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-amber-900/5 blur-[100px] rounded-full pointer-events-none translate-z-0" />
 
@@ -262,18 +253,16 @@ const About: React.FC = () => {
           <motion.div 
             className="max-w-5xl"
             initial="hidden"
-            whileInView="visible" // Triggers when in view (or use 'animate' for page load)
+            whileInView="visible"
             viewport={{ once: true }}
             variants={containerVariants}
           >
-             {/* 1. Tagline */}
              <motion.div variants={textVariants} className="mb-6">
-                <span className="inline-block text-amber-500 font-bold tracking-[0.3em] uppercase text-xs md:text-sm pl-1 border-l-2 border-amber-500 pl-4">
+                <span className="inline-block text-amber-500 font-bold tracking-[0.3em] uppercase text-xs md:text-sm border-l-2 border-amber-500 pl-4">
                     Who We Are
                 </span>
              </motion.div>
              
-             {/* 2. Main Title */}
              <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-white leading-[0.9] font-['Syne'] mb-10 tracking-tighter">
                 <div className="overflow-hidden">
                     <motion.span variants={textVariants} className="block">Architects of</motion.span>
@@ -283,14 +272,9 @@ const About: React.FC = () => {
                 </div>
              </h1>
              
-             {/* 3. Description */}
              <div className="overflow-hidden">
                  <motion.p variants={textVariants} className="text-lg md:text-2xl text-slate-400 max-w-3xl leading-relaxed font-light font-['Space_Grotesk']">
-                 Bridging the gap between Global Availability and Local
-Production. We don't just ship parts; we secure the critical
-Motion, Control, and Interconnect systems for applications
-ranging from Factory Automation to Edge Computing.
-
+                 Bridging the gap between Global Availability and Local Production. We don't just ship parts; we secure the critical Motion, Control, and Interconnect systems for applications ranging from Factory Automation to Edge Computing.
                  </motion.p>
              </div>
           </motion.div>
@@ -308,7 +292,6 @@ ranging from Factory Automation to Edge Computing.
 
        {/* IMAGE & STORY SPLIT */}
        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center mb-32 relative z-10">
-           {/* Image Container */}
            <div className="about-image-container relative h-[500px] lg:h-[700px] rounded-3xl overflow-hidden border border-white/10 group shadow-2xl transform-gpu">
                <div className="absolute inset-0 bg-purple-900/20 mix-blend-overlay z-10 transition-opacity group-hover:opacity-0" />
                <img 
@@ -316,7 +299,6 @@ ranging from Factory Automation to Edge Computing.
                  alt="Server Room" 
                  className="about-image w-full h-[120%] object-cover object-center grayscale group-hover:grayscale-0 transition-all duration-1000 will-change-transform"
                />
-               {/* Overlay Data */}
                <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black via-black/80 to-transparent z-20">
                   <div className="flex flex-col gap-2">
                       <div className="flex items-center gap-3 text-white">
@@ -332,7 +314,6 @@ ranging from Factory Automation to Edge Computing.
                <div className="absolute bottom-4 right-4 w-12 h-12 border-b border-r border-white/30 z-20" />
            </div>
 
-           {/* Narrative Text */}
            <div className="space-y-12">
                <div>
                   <h3 className="text-3xl md:text-5xl font-bold text-white mb-6 font-['Syne']">The Korden Philosophy</h3>
@@ -340,20 +321,13 @@ ranging from Factory Automation to Edge Computing.
                   
                   <div className="space-y-6 text-lg text-slate-400 font-light leading-relaxed">
                     <p>
-                    Our Core Mission: Killing Lead Times.
-In an industry defined by 12 week waiting periods, speed is the only
-currency that matters. A single missing connector shouldn't halt a
-multi-crore rupees production line. 
+                    Our Core Mission: Killing Lead Times. In an industry defined by 12 week waiting periods, speed is the only currency that matters. A single missing connector shouldn't halt a multi-crore rupees production line. 
                     </p>
                     <p>
-                    Korden Technologies was founded on a simple premise: Indian OEMs
-need a <span className="text-white font-medium">Just-In-Time sourcing partner,</span> not another slow distributor.
-We don't just take orders; we hunt down allocation.
+                    Korden Technologies was founded on a simple premise: Indian OEMs need a <span className="text-white font-medium">Just-In-Time sourcing partner,</span> not another slow distributor. We don't just take orders; we hunt down allocation.
                     </p>
                     <p>
-                    By leveraging direct access to global component hubs and navigating
-complex cross border logistics, we ensure the critical parts you need
-are on your dock when you need them, not months later.
+                    By leveraging direct access to global component hubs and navigating complex cross border logistics, we ensure the critical parts you need are on your dock when you need them, not months later.
                     </p>
                   </div>
                </div>
@@ -403,19 +377,15 @@ are on your dock when you need them, not months later.
            </div>
        </div>
        
-       {/* CTA - Big Bold Finish with Interactive Background */}
+       {/* CTA */}
        <div className="relative py-24 md:py-32 overflow-hidden border-t border-white/5">
-           {/* Schematic Grid */}
            <SchematicGridBackground />
-           
-           {/* Vignette Overlay */}
            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#020005_85%)] pointer-events-none" />
            
            <div className="max-w-4xl mx-auto text-center px-4 relative z-10">
-               
                <h2 className="text-4xl md:text-6xl font-bold text-white mb-10 font-['Syne'] leading-tight relative drop-shadow-xl">
-                  Ready to upgrade your <br/>
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-amber-400">supply chain?</span>
+                 Ready to upgrade your <br/>
+                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-amber-400">supply chain?</span>
                </h2>
                
                <Link to="/contact">
@@ -426,7 +396,6 @@ are on your dock when you need them, not months later.
                </Link>
            </div>
        </div>
-
     </div>
   );
 };

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
-import { Menu, X, ArrowRight, ArrowUp, Globe, Linkedin, Twitter, Instagram, ArrowUpRight,ChevronRight } from 'lucide-react';
+import { Menu, X, ArrowRight, ArrowUp, Globe, Linkedin, Twitter, Instagram, ArrowUpRight, ChevronRight } from 'lucide-react';
 import { NAV_LINKS, COMPANY_INFO } from '../constants';
-import { RollingText } from './UI';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// --- IMPORTANT TYPE FIX ---
+import type { Variants } from 'framer-motion'; 
 
 // --- FIXED ELASTIC GRID (Hover restored + Optimized) ---
 const ElasticGridBackground: React.FC = React.memo(() => {
@@ -12,7 +13,6 @@ const ElasticGridBackground: React.FC = React.memo(() => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  // 1. Observer: Animation tabhi chalega jab Footer screen par ho (Performance)
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -28,7 +28,7 @@ const ElasticGridBackground: React.FC = React.memo(() => {
   }, []);
 
   useEffect(() => {
-    if (!isVisible) return; // Stop heavy loop if not visible
+    if (!isVisible) return; 
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -39,7 +39,6 @@ const ElasticGridBackground: React.FC = React.memo(() => {
     let height = 0;
     let animationId: number;
 
-    // Config
     const SPACING = 45; 
     const MOUSE_INFLUENCE = 180;
     const MOUSE_INFLUENCE_SQ = MOUSE_INFLUENCE * MOUSE_INFLUENCE; 
@@ -47,7 +46,6 @@ const ElasticGridBackground: React.FC = React.memo(() => {
     const SPRING_STRENGTH = 0.08; 
     const FRICTION = 0.85; 
 
-    // State
     const mouse = { x: -1000, y: -1000 };
     interface Point {
       x: number; y: number; ox: number; oy: number; vx: number; vy: number;
@@ -73,8 +71,6 @@ const ElasticGridBackground: React.FC = React.memo(() => {
 
         for (let i = 0; i < points.length; i++) {
            const p = points[i];
-           
-           // Optimization: Distance Squared calculation
            const dx = mouse.x - p.x;
            const dy = mouse.y - p.y;
            const distSq = dx*dx + dy*dy; 
@@ -98,16 +94,12 @@ const ElasticGridBackground: React.FC = React.memo(() => {
            p.y += p.vy;
         }
 
-        // Drawing connections
         const rowsVal = Math.ceil(height / SPACING) + 2;
         const rowStride = rowsVal + 1; 
-        
         ctx.lineWidth = 1;
 
         for (let i = 0; i < points.length; i++) {
             const p = points[i];
-            
-            // Optimization: Faster intensity calc
             const d = Math.abs(p.x - p.ox) + Math.abs(p.y - p.oy);
             const intensity = Math.min(1, d / 40);
 
@@ -134,21 +126,20 @@ const ElasticGridBackground: React.FC = React.memo(() => {
         animationId = requestAnimationFrame(update);
     };
 
-    let resizeTimeout: NodeJS.Timeout;
+    let resizeTimeout: any;
     const handleResize = () => {
-       clearTimeout(resizeTimeout);
-       resizeTimeout = setTimeout(() => {
-           if (containerRef.current) {
-               width = containerRef.current.clientWidth;
-               height = containerRef.current.clientHeight;
-               canvas.width = width;
-               canvas.height = height;
-               init();
-           }
-       }, 200);
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            if (containerRef.current) {
+                width = containerRef.current.clientWidth;
+                height = containerRef.current.clientHeight;
+                canvas.width = width;
+                canvas.height = height;
+                init();
+            }
+        }, 200);
     };
 
-    // FIX: Using WINDOW listener so z-index doesn't block mouse
     const handleMouseMove = (e: MouseEvent) => {
        if (!canvas) return;
        const rect = canvas.getBoundingClientRect();
@@ -156,7 +147,6 @@ const ElasticGridBackground: React.FC = React.memo(() => {
        mouse.y = e.clientY - rect.top;
     };
     
-    // Setup
     if (containerRef.current) {
         width = containerRef.current.clientWidth;
         height = containerRef.current.clientHeight;
@@ -166,7 +156,7 @@ const ElasticGridBackground: React.FC = React.memo(() => {
     }
 
     window.addEventListener('resize', handleResize);
-    window.addEventListener('mousemove', handleMouseMove); // FIXED: Listen on Window
+    window.addEventListener('mousemove', handleMouseMove); 
     
     update();
 
@@ -184,8 +174,6 @@ const ElasticGridBackground: React.FC = React.memo(() => {
   );
 });
 
-
-
 // --- OPTIMIZED NAVBAR ---
 export const Navbar: React.FC = React.memo(() => {
   const [isOpen, setIsOpen] = useState(false);
@@ -194,7 +182,6 @@ export const Navbar: React.FC = React.memo(() => {
   const lastScrollY = useRef(0);
   const location = useLocation();
 
-  // Scroll Handling
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
@@ -223,8 +210,8 @@ export const Navbar: React.FC = React.memo(() => {
 
   useEffect(() => { setIsOpen(false); }, [location]);
 
-  // --- ANIMATION VARIANTS (PREMIUM FEEL) ---
-  const menuVariants = {
+  // --- ANIMATION VARIANTS ---
+  const menuVariants: Variants = {
     closed: { 
       opacity: 0, 
       scale: 0.95,
@@ -235,11 +222,11 @@ export const Navbar: React.FC = React.memo(() => {
       opacity: 1, 
       scale: 1,
       y: 0,
-      transition: { duration: 0.3, ease: "backOut" } // Little bounce effect
+      transition: { duration: 0.3, ease: "backOut" }
     }
   };
 
-  const linkStagger = {
+  const linkStagger: Variants = {
     open: {
       transition: { staggerChildren: 0.07, delayChildren: 0.1 }
     },
@@ -248,7 +235,7 @@ export const Navbar: React.FC = React.memo(() => {
     }
   };
 
-  const linkItem = {
+  const linkItem: Variants = {
     closed: { opacity: 0, x: -20 },
     open: { opacity: 1, x: 0, transition: { duration: 0.3 } }
   };
@@ -258,14 +245,12 @@ export const Navbar: React.FC = React.memo(() => {
       className={`fixed z-50 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] left-1/2 -translate-x-1/2 flex flex-col items-center will-change-[transform,opacity]
         ${!isVisible ? '-translate-y-[150%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}
         ${scrolled 
-           ? 'top-4 w-[95%] md:w-[1050px] rounded-[2rem] bg-[#050505]/90 backdrop-blur-xl border border-white/10 shadow-2xl py-3 px-6' 
-           : 'top-0 w-full bg-transparent border-transparent py-6 px-4 md:px-8'
+            ? 'top-4 w-[95%] md:w-[1050px] rounded-[2rem] bg-[#050505]/90 backdrop-blur-xl border border-white/10 shadow-2xl py-3 px-6' 
+            : 'top-0 w-full bg-transparent border-transparent py-6 px-4 md:px-8'
         }
       `}
     >
       <div className="flex justify-between items-center w-full max-w-7xl mx-auto relative">
-        
-        {/* LOGO */}
         <Link to="/" className="flex items-center gap-3 group shrink-0 relative z-50">
           <div className={`relative flex items-center justify-center transition-all duration-500 ${scrolled ? 'w-9 h-9' : 'w-11 h-11'}`}>
             <img src="/logo.png" alt="Korden Logo" className={`transition-all duration-500 object-contain ${scrolled ? 'w-9 h-9' : 'w-11 h-11'}`} />
@@ -275,7 +260,6 @@ export const Navbar: React.FC = React.memo(() => {
           </span>
         </Link>
 
-        {/* DESKTOP NAV */}
         <div className={`hidden md:flex items-center transition-all duration-500 ${scrolled ? 'gap-1' : 'gap-4'}`}>
           {NAV_LINKS.map((link) => (
             <NavLink 
@@ -297,7 +281,6 @@ export const Navbar: React.FC = React.memo(() => {
           ))}
         </div>
 
-        {/* ACTIONS */}
         <div className="flex items-center gap-4 relative z-50">
             <Link to="/contact" className="hidden md:block">
               <button className={`relative overflow-hidden flex items-center gap-2 bg-white text-black font-bold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_rgba(255,255,255,0.3)] group ${scrolled ? 'px-5 py-2 text-xs' : 'px-7 py-2.5 text-sm'}`}>
@@ -307,7 +290,6 @@ export const Navbar: React.FC = React.memo(() => {
               </button>
             </Link>
 
-            {/* Mobile Toggle Button */}
             <div className="md:hidden">
               <button 
                 onClick={() => setIsOpen(!isOpen)} 
@@ -319,7 +301,6 @@ export const Navbar: React.FC = React.memo(() => {
         </div>
       </div>
 
-      {/* --- NEW PREMIUM MOBILE MENU --- */}
       <AnimatePresence>
         {isOpen && (
             <motion.div 
@@ -329,15 +310,11 @@ export const Navbar: React.FC = React.memo(() => {
                 variants={menuVariants}
                 className="md:hidden absolute top-full left-0 w-full px-2 mt-2 origin-top"
             >
-                {/* Floating Card Design */}
                 <div className="bg-[#0a0a0a]/95 backdrop-blur-3xl border border-white/15 rounded-[2rem] p-5 shadow-[0_50px_100px_-20px_rgba(0,0,0,1)] overflow-hidden relative">
-                    
-                    {/* Background Glow */}
                     <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 blur-[50px] rounded-full pointer-events-none" />
                     <div className="absolute bottom-0 left-0 w-32 h-32 bg-amber-500/10 blur-[50px] rounded-full pointer-events-none" />
 
                     <motion.div variants={linkStagger} className="flex flex-col gap-2 relative z-10">
-                        
                         {NAV_LINKS.map((link) => (
                           <motion.div key={link.path} variants={linkItem}>
                               <NavLink 
@@ -366,7 +343,6 @@ export const Navbar: React.FC = React.memo(() => {
 
                         <div className="h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent my-3" />
                         
-                        {/* Get Quote Button (Mobile) */}
                         <motion.div variants={linkItem}>
                             <Link to="/contact">
                             <button className="w-full py-4 bg-gradient-to-r from-amber-200 to-amber-500 text-black font-bold rounded-2xl font-['Space_Grotesk'] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(245,158,11,0.3)]">
@@ -375,7 +351,6 @@ export const Navbar: React.FC = React.memo(() => {
                             </button>
                             </Link>
                         </motion.div>
-
                     </motion.div>
                 </div>
             </motion.div>
@@ -384,16 +359,6 @@ export const Navbar: React.FC = React.memo(() => {
     </nav>
   );
 });
-
-
-
-
-
-
-
-
-
-
 
 // --- FOOTER ---
 export const Footer: React.FC = React.memo(() => {
@@ -406,16 +371,13 @@ export const Footer: React.FC = React.memo(() => {
 
   return (
     <footer className="relative bg-[#020005] overflow-hidden border-t border-purple-900/20">
-      {/* BACKGROUND (Lazy Loaded via Component) */}
       <ElasticGridBackground />
       
-      {/* Overlays */}
       <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-[#020005] via-[#020005]/80 to-transparent z-10 pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#020005_100%)] z-10 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pt-16 md:pt-20 pb-10">
 
-        {/* SCALE YOUR VISION (HOME ONLY) */}
         {isHomePage && (
           <div className="relative flex flex-col items-center justify-center text-center mb-20 md:mb-32">
               <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white/90 text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mb-8 shadow-lg hover:bg-white/10 transition-colors">
@@ -444,10 +406,8 @@ export const Footer: React.FC = React.memo(() => {
           </div>
         )}
 
-        {/* LINKS GRID */}
         <div className="grid grid-cols-2 md:grid-cols-12 gap-8 md:gap-0 bg-[#050505]/80 backdrop-blur-xl rounded-3xl p-6 md:p-8 border border-white/5 shadow-2xl relative z-10">
 
-            {/* 1. Brand */}
             <div className="order-1 col-span-2 md:col-span-4 md:pr-12 md:border-r border-white/5 flex flex-col justify-between items-center md:items-start text-center md:text-left">
                 <div>
                     <Link to="/" className="flex items-center gap-3 mb-6 group w-fit mx-auto md:mx-0">
@@ -467,7 +427,6 @@ export const Footer: React.FC = React.memo(() => {
                 </div>
             </div>
 
-            {/* 2. Explore */}
             <div className="order-2 col-span-1 md:col-span-2 md:px-8 md:border-r border-white/5">
                 <h4 className="font-['Syne'] font-bold text-white uppercase tracking-widest mb-6 text-xs opacity-50">Explore</h4>
                 <ul className="space-y-3">
@@ -481,7 +440,6 @@ export const Footer: React.FC = React.memo(() => {
                 </ul>
             </div>
 
-            {/* 4. Legal */}
             <div className="order-3 col-span-1 md:col-span-3 md:pl-8 flex flex-col justify-between h-full">
                 <div>
                     <h4 className="font-['Syne'] font-bold text-white uppercase tracking-widest mb-6 text-xs opacity-50">Legal</h4>
@@ -499,7 +457,6 @@ export const Footer: React.FC = React.memo(() => {
                 </button>
             </div>
 
-            {/* 3. Contact */}
             <div className="order-4 col-span-2 md:col-span-3 md:px-8 md:border-r border-white/5 border-t border-white/5 md:border-t-0 pt-8 md:pt-0 mt-4 md:mt-0">
                 <h4 className="font-['Syne'] font-bold text-white uppercase tracking-widest mb-6 text-xs opacity-50">Office</h4>
                 <ul className="space-y-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4 md:gap-0">
@@ -521,21 +478,20 @@ export const Footer: React.FC = React.memo(() => {
             </div>
         </div>
 
-        {/* BOTTOM BAR */}
         <div className="py-6 flex flex-col md:flex-row justify-between items-center gap-4 mt-8 opacity-60 hover:opacity-100 transition-opacity">
-           <p className="text-[10px] text-slate-500 font-['Space_Grotesk'] uppercase tracking-widest">
-             © {new Date().getFullYear()} KORDEN TECHNOLOGIES.
-           </p>
-           <div className="flex items-center gap-6">
-               <div className="flex items-center gap-2 group cursor-help">
-                 <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                 <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider group-hover:text-green-500 transition-colors">Systems Nominal</span>
-               </div>
-               <div className="hidden md:flex items-center gap-2 group cursor-help">
-                  <Globe className="w-3 h-3 text-slate-500 group-hover:text-amber-500 transition-colors" />
-                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider group-hover:text-amber-500 transition-colors">Mumbai, IN</span>
-               </div>
-           </div>
+            <p className="text-[10px] text-slate-500 font-['Space_Grotesk'] uppercase tracking-widest">
+              © {new Date().getFullYear()} KORDEN TECHNOLOGIES.
+            </p>
+            <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2 group cursor-help">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                  <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider group-hover:text-green-500 transition-colors">Systems Nominal</span>
+                </div>
+                <div className="hidden md:flex items-center gap-2 group cursor-help">
+                   <Globe className="w-3 h-3 text-slate-500 group-hover:text-amber-500 transition-colors" />
+                   <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider group-hover:text-amber-500 transition-colors">Mumbai, IN</span>
+                </div>
+            </div>
         </div>
 
       </div>

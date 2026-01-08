@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, SectionTitle } from '../components/UI';
-import { ChevronRight, Cpu, Globe, ShieldCheck, ArrowUpRight, Zap, Layers, Factory,Package, Search, Plus, Minus, Lock, Server } from 'lucide-react';
+import { ChevronRight, Cpu, Globe, ShieldCheck, ArrowUpRight, Zap, Layers, Factory, Package, Search, Plus, Minus, Lock, Server } from 'lucide-react';
 import { SERVICES } from '../constants';
 import HeroBackground from '../components/HeroBackground';
 
@@ -79,14 +79,10 @@ const GlobePulse = () => (
 
 const ScannerGrid = () => (
   <div className="relative w-full h-full overflow-hidden flex items-center justify-center bg-[#050505] group">
-    {/* Ambient Glows instead of Grid */}
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.1),transparent_70%)]" />
-    
-    {/* Radar Ripples */}
     <div className="absolute w-40 h-40 border border-white/5 rounded-full animate-[ping_3s_linear_infinite]" />
     <div className="absolute w-64 h-64 border border-white/5 rounded-full animate-[ping_4s_linear_infinite_1s]" />
 
-    {/* HUD Target Frame */}
     <div className="absolute w-64 h-64 flex items-center justify-center pointer-events-none">
        <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-amber-500/60" />
        <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-amber-500/60" />
@@ -94,7 +90,6 @@ const ScannerGrid = () => (
        <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-amber-500/60" />
     </div>
 
-    {/* Enhanced Scanning Bar */}
     <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-amber-500/10 to-transparent z-20 animate-[scan_3s_ease-in-out_infinite] border-t border-amber-500/40 shadow-[0_-10px_20px_rgba(245,158,11,0.1)]" />
 
     <div className="relative z-20 flex flex-col items-center">
@@ -117,7 +112,6 @@ const KittingBox = () => (
   <div className="relative w-full h-full flex items-center justify-center group bg-[#050505] overflow-hidden">
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.05),transparent_70%)]" />
     <div className="relative w-48 h-48 flex items-center justify-center">
-      {/* Fragments Animation */}
       <div className="absolute top-0 left-0 w-8 h-8 bg-purple-500/20 border border-purple-500/40 rounded animate-pulse" />
       <div className="absolute bottom-0 right-0 w-10 h-10 bg-amber-500/20 border border-amber-500/40 rounded animate-pulse" />
       
@@ -134,30 +128,19 @@ const KittingBox = () => (
 
 const ChipFlow = () => (
   <div className="relative w-full h-full flex items-center justify-center group overflow-hidden bg-[#050505]">
-    {/* 1. Micro-Circuit Background */}
     <div className="absolute inset-0 opacity-[0.03] scale-150" 
          style={{ backgroundImage: `radial-gradient(#fff 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
 
-    {/* 2. FULL WIDTH DATA FLOW (Line passes behind the chip) */}
     <div className="absolute inset-0 flex items-center z-0 pointer-events-none">
        <div className="relative w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/20 to-transparent">
-          
-          {/* Main fast particle */}
           <div className="absolute top-1/2 -translate-y-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-amber-500 to-transparent animate-[shimmer_3s_linear_infinite]" />
-          
-          {/* Secondary smaller particle */}
           <div className="absolute top-1/2 -translate-y-1/2 w-24 h-[1px] bg-gradient-to-r from-transparent via-purple-400 to-transparent animate-[shimmer_3s_linear_infinite_1.5s]" />
-          
-          {/* White flash particle for speed feel */}
           <div className="absolute top-1/2 -translate-y-1/2 w-32 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent animate-[shimmer_2s_linear_infinite_0.5s]" />
        </div>
     </div>
 
-    {/* 3. THE PROCESSOR CHIP (Set to z-10 to stay above the line) */}
     <div className="relative z-10">
       <div className="w-48 h-48 bg-zinc-900 border border-white/10 relative flex items-center justify-center shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-3xl group-hover:border-purple-500/40 transition-all duration-700">
-         
-         {/* Hardware Detail: Pins */}
          <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex gap-4">
             {[1, 2, 3, 4].map(i => <div key={i} className="w-1.5 h-3 bg-zinc-800 border border-white/10 rounded-full" />)}
          </div>
@@ -165,20 +148,15 @@ const ChipFlow = () => (
             {[1, 2, 3, 4].map(i => <div key={i} className="w-1.5 h-3 bg-zinc-800 border border-white/10 rounded-full" />)}
          </div>
 
-         {/* Inner Glass Core */}
          <div className="w-32 h-32 bg-black/60 backdrop-blur-xl border border-white/5 rounded-2xl flex items-center justify-center overflow-hidden">
             <Cpu className="w-16 h-16 text-slate-100 relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]" strokeWidth={1} />
-            
-            {/* Inner pulsing light */}
             <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/10 via-transparent to-amber-500/10 animate-pulse" />
          </div>
 
-         {/* Corner Accents */}
          <div className="absolute top-3 left-3 w-4 h-4 border-t border-l border-amber-500/40 rounded-tl" />
          <div className="absolute bottom-3 right-3 w-4 h-4 border-b border-r border-amber-500/40 rounded-br" />
       </div>
 
-      {/* Outer Radial Glow */}
       <div className="absolute -inset-10 bg-purple-600/5 blur-[80px] rounded-full -z-10 animate-pulse" />
     </div>
   </div>
@@ -251,12 +229,7 @@ const VerticalAccordionItem: React.FC<{
 
         <div className="relative z-10 flex-1 overflow-hidden">
              <div 
-               className={`
-                 relative md:absolute inset-0 
-                 flex flex-col md:flex-row 
-                 transition-all duration-700 delay-100 ease-out 
-                 ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 md:translate-y-8'}
-               `}
+               className={`relative md:absolute inset-0 flex flex-col md:flex-row transition-all duration-700 delay-100 ease-out ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 md:translate-y-8'}`}
                onClick={(e) => isActive && e.stopPropagation()} 
              >
                  <div className="flex-1 p-6 md:p-12 flex flex-col justify-center relative bg-gradient-to-r from-transparent to-black/20">
@@ -267,7 +240,7 @@ const VerticalAccordionItem: React.FC<{
                           <Icon size={24} />
                        </div>
                        <span className="text-xs font-bold text-slate-500 uppercase tracking-widest border-l border-slate-700 pl-3 ml-1">
-                          Core Feature
+                         Core Feature
                        </span>
                     </div>
 
@@ -297,13 +270,10 @@ const VerticalAccordionItem: React.FC<{
   );
 }
 
-// --- MAIN HOME COMPONENT ---
 const Home: React.FC = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const scrollSectionRef = useRef<HTMLDivElement>(null);
-  
-  // FIX: Using a ref to store active index for loop efficiency
   const activeIndexRef = useRef(0);
   const progressBarsRef = useRef<(HTMLDivElement | null)[]>([]);
   
@@ -315,36 +285,45 @@ const Home: React.FC = () => {
   };
 
   useLayoutEffect(() => {
-    // Refs reset to keep clean
     progressBarsRef.current = progressBarsRef.current.slice(0, 4);
 
-    // Context for Cleanup
     const ctx = gsap.context(() => {
-      
       const tl = gsap.timeline();
       
-      // Hero Animations
-      gsap.fromTo(badgeRef.current,
-        { y: -20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", delay: 0.2 }
-      );
+      if (badgeRef.current) {
+        gsap.fromTo(badgeRef.current,
+          { y: -20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: "power3.out", delay: 0.2 }
+        );
+      }
 
-      tl.fromTo(heroRef.current?.querySelector('h1'), 
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: "power3.out" }
-      )
-      .fromTo(heroRef.current?.querySelector('p'),
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8 },
-        "-=0.6"
-      )
-      .fromTo(heroRef.current?.querySelector('.hero-btns'),
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6 },
-        "-=0.4"
-      );
+      const h1 = heroRef.current?.querySelector('h1');
+      const p = heroRef.current?.querySelector('p');
+      const btns = heroRef.current?.querySelector('.hero-btns');
 
-      // --- SERVICES SCROLL TRIGGER LOGIC ---
+      if (h1) {
+        tl.fromTo(h1, 
+          { y: 50, opacity: 0 },
+          { y: 0, opacity: 1, duration: 1, ease: "power3.out" }
+        );
+      }
+      
+      if (p) {
+        tl.fromTo(p,
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8 },
+          "-=0.6"
+        );
+      }
+
+      if (btns) {
+        tl.fromTo(btns,
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.6 },
+          "-=0.4"
+        );
+      }
+
       if (scrollSectionRef.current) {
         ScrollTrigger.create({
           trigger: scrollSectionRef.current,
@@ -352,46 +331,37 @@ const Home: React.FC = () => {
           end: "bottom bottom",
           scrub: true,
           onUpdate: (self) => {
-             const total = 4;
-             const rawProgress = self.progress * total;
-             const currentIndex = Math.floor(rawProgress);
-             const safeIndex = Math.min(currentIndex, total - 1);
-             
-             // 1. UPDATE REACT STATE (Only if changed, to switch Content/Image)
-             if (activeIndexRef.current !== safeIndex) {
-                 activeIndexRef.current = safeIndex;
-                 setActiveService(safeIndex);
-             }
+              const total = 4;
+              const rawProgress = self.progress * total;
+              const currentIndex = Math.floor(rawProgress);
+              const safeIndex = Math.min(currentIndex, total - 1);
+              
+              if (activeIndexRef.current !== safeIndex) {
+                  activeIndexRef.current = safeIndex;
+                  setActiveService(safeIndex);
+              }
 
-             // 2. ANIMATE PROGRESS BARS (Direct DOM, No React Renders)
-             progressBarsRef.current.forEach((bar, idx) => {
-               if (!bar) return;
-               
-               if (idx === safeIndex) {
-                 // Current Bar: Fill based on scroll percent
-                 const itemProgress = rawProgress - currentIndex;
-                 const clamped = Math.max(0, Math.min(1, itemProgress));
-                 
-                 bar.style.width = `${clamped * 100}%`;
-                 bar.style.opacity = '1';
-
-               } else if (idx < safeIndex) {
-                 // Past Bars: Full
-                 bar.style.width = '100%';
-                 bar.style.opacity = '1'; 
-               } else {
-                 // Future Bars: Empty
-                 bar.style.width = '0%';
-                 bar.style.opacity = '0.3';
-               }
-             });
+              progressBarsRef.current.forEach((bar, idx) => {
+                if (!bar) return;
+                if (idx === safeIndex) {
+                  const itemProgress = rawProgress - currentIndex;
+                  const clamped = Math.max(0, Math.min(1, itemProgress));
+                  bar.style.width = `${clamped * 100}%`;
+                  bar.style.opacity = '1';
+                } else if (idx < safeIndex) {
+                  bar.style.width = '100%';
+                  bar.style.opacity = '1'; 
+                } else {
+                  bar.style.width = '0%';
+                  bar.style.opacity = '0.3';
+                }
+              });
           }
         });
       }
-    }, scrollSectionRef); // Scope to section
+    }, heroRef);
 
-    return () => ctx.revert(); // Cleanup on unmount
-
+    return () => ctx.revert();
   }, []);
 
   const scrollToService = (index: number) => {
@@ -412,22 +382,10 @@ const Home: React.FC = () => {
 
   return (
     <div className="w-full">
-      
       <style>{`
-        @keyframes scan {
-          0%, 100% { top: 0%; opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 1; }
-          100% { top: 100%; opacity: 0; }
-        }
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-        @keyframes gridMove {
-          0% { background-position: 0 0; }
-          100% { background-position: 0 40px; }
-        }
+        @keyframes scan { 0%, 100% { top: 0%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 0 40px; } }
       `}</style>
 
       {/* Hero Section */}
@@ -435,8 +393,6 @@ const Home: React.FC = () => {
         <HeroBackground />
         
         <div ref={heroRef} className="max-w-7xl mx-auto w-full flex flex-col items-center text-center relative z-10">
-         
-          
           <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl mt-8 font-bold leading-[0.9] mb-8 text-white flex flex-col items-center tracking-tighter w-full">
             <SpotlightHeroText>
               <span className="block">Powering the</span>
@@ -471,18 +427,11 @@ and high demand Components and Automation hardware.
             onMouseLeave={() => setActiveAccordion(0)}
           >
             <VerticalAccordionItem 
-              id={1} title="Strategic Global Access" subtitle="Borderless Sourcing" desc="Direct supply lines to component hubs in Asia and Europe. We
-              bypass standard distribution bottlenecks to secure allocation for
-              hard to find components and Automation hardware when local
-              stock runs dry"
+              id={1} title="Strategic Global Access" subtitle="Borderless Sourcing" desc="Direct supply lines to component hubs in Asia and Europe. We bypass standard distribution bottlenecks to secure allocation for hard to find components and Automation hardware when local stock runs dry"
               icon={Globe} Graphic={GlobePulse} isActive={activeAccordion === 1} onActivate={handleAccordionActivate}
             />
              <VerticalAccordionItem 
-              id={2} title="Obsolete & Shortage Sourcing" subtitle="Zero Compromise" desc="Specialized procurement for End-of-Life (EOL) and shortage
-              components. Whether it’s a discontinued PLC or a Mil-Spec
-              connector, we track down the inventory that keeps your legacy
-              machines running.
-              "
+              id={2} title="Obsolete & Shortage Sourcing" subtitle="Zero Compromise" desc="Specialized procurement for End-of-Life (EOL) and shortage components. Whether it’s a discontinued PLC or a Mil-Spec connector, we track down the inventory that keeps your legacy machines running."
               icon={ShieldCheck} Graphic={ScannerGrid} isActive={activeAccordion === 2} onActivate={handleAccordionActivate}
             />
             <VerticalAccordionItem 
@@ -490,141 +439,107 @@ and high demand Components and Automation hardware.
               icon={Package} Graphic={KittingBox} isActive={activeAccordion === 3} onActivate={handleAccordionActivate}
             />
              <VerticalAccordionItem 
-              id={4} title="Market Intelligence" subtitle="Procurement First" desc="We don't just take orders; we forecast risks. Our team tracks
-              global raw material shortages and lead time trends, advising you
-              on strategic 'Stocking Buys' before the market tightens.
-              "
+              id={4} title="Market Intelligence" subtitle="Procurement First" desc="We don't just take orders; we forecast risks. Our team tracks global raw material shortages and lead time trends, advising you on strategic 'Stocking Buys' before the market tightens."
               icon={Cpu} Graphic={ChipFlow} isActive={activeAccordion === 4} onActivate={handleAccordionActivate}
             />
           </div>
         </div>
       </section>
 
-      {/* Comprehensive Solutions - FIXED HEIGHT & SCROLL */}
+      {/* Comprehensive Solutions */}
       <section ref={scrollSectionRef} className="relative h-[600vh] bg-[#050505]">
-         <div className="sticky top-0 h-screen w-full flex flex-col justify-center py-10 overflow-hidden">
-           
-           {/* Mobile Background */}
-           <div className="absolute inset-0 md:hidden z-0">
-             {SERVICES.slice(0, 4).map((service, index) => (
-                 <div key={`mobile-bg-${index}`} 
-                      className={`absolute inset-0 transition-opacity duration-700 ${activeService === index ? 'opacity-30' : 'opacity-0'}`}>
+    <div className="sticky top-0 h-screen w-full flex flex-col justify-center py-6 overflow-hidden">
+        {/* Mobile Background */}
+        <div className="absolute inset-0 md:hidden z-0">
+            {SERVICES.slice(0, 4).map((_service, index) => (
+                <div key={`mobile-bg-${index}`} 
+                     className={`absolute inset-0 transition-opacity duration-700 ${activeService === index ? 'opacity-30' : 'opacity-0'}`}>
                     <img src={`https://picsum.photos/1000/800?random=${index + 100}`} className="w-full h-full object-cover grayscale" alt="" />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/90 to-[#050505]/50" />
-                 </div>
-             ))}
-           </div>
+                </div>
+            ))}
+        </div>
 
-           <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[800px] h-[800px] border border-white/5 rounded-full opacity-20 animate-[spin_60s_linear_infinite] pointer-events-none"></div>
-           <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[600px] h-[600px] border border-white/5 rounded-full opacity-20 animate-[spin_40s_linear_infinite_reverse] pointer-events-none"></div>
+        {/* Decorative Circle */}
+        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[700px] h-[500px] border border-white/5 rounded-full opacity-20 animate-[spin_60s_linear_infinite] pointer-events-none"></div>
 
-           <div className="max-w-7xl mx-auto w-full px-12 relative z-10 flex flex-col justify-center h-full">
-              <div className="shrink-0 mb-4 ">
-                  <SectionTitle title="Comprehensive Solutions" subtitle="Services" />
-              </div>
-              
-              {/* CONTENT CONTAINER */}
-              <div className="flex flex-col md:flex-row gap-4 lg:gap-8">
-                  
-                  {/* Left: Interactive Control Panel */}
-                  <div className="w-full md:w-1/3 flex flex-col gap-2 justify-center">
-                      {SERVICES.slice(0, 4).map((service, index) => (
-                          <div 
-                              key={service.id}
-                              onClick={() => scrollToService(index)}
-                              className={`p-6 rounded-2xl cursor-pointer transition-all duration-500 border relative overflow-hidden group shrink-0 ${
-                                  activeService === index 
-                                  ? 'bg-white/10 md:bg-white/5 border-amber-500/50 shadow-[0_0_30px_rgba(245,158,11,0.1)] translate-x-2' 
-                                  : 'bg-black/40 md:bg-transparent border-white/5 hover:bg-white/5 hover:border-white/10'
-                              }`}
-                          >
-                              {/* IMPORTANT FIX: 
-                                  1. Added 'transition-none' to prevent CSS conflicts
-                                  2. Using direct ref assignment
-                              */}
-                              <div 
-                                ref={(el) => { progressBarsRef.current[index] = el; }}
-                                className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-amber-500 to-purple-600 z-20 transition-none"
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                              <div className="flex items-center justify-between relative z-10">
-                                <h3 className={`text-xl font-bold font-['Space_Grotesk'] transition-colors ${activeService === index ? 'text-white' : 'text-slate-500 group-hover:text-slate-300'}`}>
+        <div className="max-w-7xl mx-auto w-full px-12 relative z-10 flex flex-col justify-center h-full">
+            {/* Title Section - Slightly reduced margin */}
+            <div className="shrink-0 mb-2">
+                <SectionTitle title="Comprehensive Solutions" subtitle="Services" />
+            </div>
+            
+            <div className="flex flex-col md:flex-row gap-4 lg:gap-8 items-center">
+                
+                {/* Left side: Service Boxes (Height reduced by 10%) */}
+                <div className="w-full md:w-1/3 flex flex-col gap-2 justify-center">
+                    {SERVICES.slice(0, 4).map((service, index) => (
+                        <div 
+                            key={service.id}
+                            onClick={() => scrollToService(index)}
+                            className={`p-4 lg:p-5 rounded-2xl cursor-pointer transition-all duration-500 border relative overflow-hidden group shrink-0 ${
+                                activeService === index 
+                                ? 'bg-white/10 md:bg-white/5 border-amber-500/50 shadow-[0_0_30px_rgba(245,158,11,0.1)] translate-x-2' 
+                                : 'bg-black/40 md:bg-transparent border-white/5 hover:bg-white/5 hover:border-white/10'
+                            }`}
+                        >
+                            <div ref={(el) => { progressBarsRef.current[index] = el; }} className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-amber-500 to-purple-600 z-20 transition-none" />
+                            
+                            <div className="flex items-center justify-between relative z-10">
+                                <h3 className={`text-lg lg:text-xl font-bold transition-colors ${activeService === index ? 'text-white' : 'text-slate-500 group-hover:text-slate-300'}`}>
                                     {service.title}
                                 </h3>
-                                {activeService === index && <ArrowUpRight className="w-6 h-6 text-amber-500" />}
-                              </div>
-                              
-                              <p className={`text-sm mt-3 line-clamp-2 transition-colors duration-300 ${activeService === index ? 'text-slate-200' : 'text-slate-600'}`}>
-                                  {service.description}
-                              </p>
-                          </div>
-                      ))}
-                      
-                      <div className="mt-4 hidden md:block">
-                          <Link to="/services">
-                              <Button variant="outline" className="w-full text-sm">View All Services</Button>
-                          </Link>
-                      </div>
-                  </div>
-
-                  {/* Right: Holographic Display Viewport */}
-                  <div className="md:w-2/3 relative rounded-3xl overflow-hidden border border-white/10 bg-[#020202] shadow-2xl min-h-[500px] hidden md:block">
-                        <div className="absolute inset-0 pointer-events-none z-20 border border-white/5 rounded-3xl">
-                           <div className="absolute top-8 right-8 flex gap-2">
-                              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-                              <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-                              <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                           </div>
+                                {activeService === index && <ArrowUpRight className="w-5 h-5 text-amber-500" />}
+                            </div>
+                            
+                            <p className={`text-xs lg:text-sm mt-2 line-clamp-2 transition-colors duration-300 ${activeService === index ? 'text-slate-200' : 'text-slate-600'}`}>
+                                {service.description}
+                            </p>
                         </div>
+                    ))}
+                    
+                    <div className="mt-2 hidden md:block">
+                        <Link to="/services">
+                            <Button variant="outline" className="w-full text-xs py-2">View All Services</Button>
+                        </Link>
+                    </div>
+                </div>
 
-                        {SERVICES.slice(0, 4).map((service, index) => {
-                            const IconsList = [Globe, Layers, Factory, Search];
-                            const ActiveIcon = IconsList[index % IconsList.length];
+                {/* Right side: Image Display (Height reduced to 450px) */}
+                <div className="md:w-2/3 relative rounded-3xl overflow-hidden border border-white/10 bg-[#020202] shadow-2xl min-h-[400px] h-[550px] hidden md:block">
+                    {SERVICES.slice(0, 4).map((_service, index) => {
+                        const IconsList = [Globe, Layers, Factory, Search];
+                        const ActiveIcon = IconsList[index % IconsList.length];
 
-                            return (
-                              <div 
-                                 key={service.id}
-                                 className={`absolute inset-0 transition-all duration-700 ease-in-out ${activeService === index ? 'opacity-100 z-10 scale-100' : 'opacity-0 z-0 scale-105'}`}
-                              >
-                                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
-                                  <img 
-                                      src={`https://picsum.photos/1000/800?random=${index + 100}`} 
-                                      alt={service.title}
-                                      className="w-full h-full object-cover filter saturate-[0.8] contrast-[1.1]" 
-                                  />
-                                  
-                                  <div className="absolute bottom-0 left-0 w-full p-8 lg:p-12 z-20">
-                                      <div className="flex items-center gap-4 mb-4 lg:mb-6">
-                                          <div className="inline-block px-3 py-1 rounded bg-purple-500/20 border border-purple-500/30 text-purple-300 text-[10px] lg:text-xs font-bold tracking-widest uppercase backdrop-blur-md">
-                                              Service Module 0{index + 1}
-                                          </div>
-                                          <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent"></div>
-                                      </div>
+                        return (
+                            <div key={SERVICES[index].id} className={`absolute inset-0 transition-all duration-700 ease-in-out ${activeService === index ? 'opacity-100 z-10 scale-100' : 'opacity-0 z-0 scale-105'}`}>
+                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
+                                <img src={`https://picsum.photos/1000/800?random=${index + 100}`} alt={SERVICES[index].title} className="w-full h-full object-cover filter saturate-[0.8] contrast-[1.1]" />
+                                
+                                <div className="absolute bottom-0 left-0 w-full p-6 lg:p-10 z-20">
+                                    <h2 className="text-2xl lg:text-4xl font-bold text-white mb-3 lg:mb-4 font-['Syne'] leading-tight drop-shadow-lg">
+                                        {SERVICES[index].title}
+                                    </h2>
+                                    <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 items-start">
+                                        <p className="text-sm lg:text-base text-slate-300 max-w-lg leading-relaxed drop-shadow-md">
+                                            {SERVICES[index].description} Korden Technologies ensures top-tier quality control and seamless integration.
+                                        </p>
+                                        <div className="shrink-0 w-12 h-12 lg:w-16 lg:h-16 rounded-xl border border-white/10 bg-white/5 backdrop-blur-lg flex items-center justify-center text-amber-500 shadow-[0_0_30px_rgba(245,158,11,0.2)]">
+                                            <ActiveIcon size={24} strokeWidth={1.5} className="lg:w-8 lg:h-8" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
 
-                                      <h2 className="text-3xl lg:text-5xl font-bold text-white mb-4 lg:mb-6 font-['Syne'] leading-tight drop-shadow-lg">
-                                          {service.title}
-                                      </h2>
-                                      
-                                      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
-                                          <p className="text-base lg:text-lg text-slate-300 max-w-xl leading-relaxed drop-shadow-md">
-                                              {service.description} Korden Technologies ensures top-tier quality control and seamless integration for your supply chain needs.
-                                          </p>
-                                          <div className="flex-shrink-0">
-                                             <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-lg flex items-center justify-center text-amber-500 shadow-[0_0_30px_rgba(245,158,11,0.2)]">
-                                                <ActiveIcon size={32} strokeWidth={1.5} className="lg:w-10 lg:h-10" />
-                                             </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                            );
-                        })}
-                  </div>
-              </div>
-           </div>
-         </div>
-      </section>
+            </div>
+        </div>
+    </div>
+</section>
+
+
     </div>
   );
 };

@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useRef } from 'react';
 import { SectionTitle } from '../components/UI';
 import { SERVICES } from '../constants';
 import * as Icons from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { CheckCircle2, ArrowRight, Zap, Settings, Truck, Search, Activity, ChevronRight } from 'lucide-react';
-import { motion } from 'framer-motion'; // Import Framer Motion
+import { CheckCircle2, ArrowRight, Settings, Truck, Search, Activity, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import type { Variants } from 'framer-motion';
 
 // --- CUSTOM CAPABILITIES MAPPING ---
 const CAPABILITIES_MAP: Record<string, string[]> = {
@@ -14,14 +15,14 @@ const CAPABILITIES_MAP: Record<string, string[]> = {
   's4': ['Rugged Fanless PCs', 'AI Inference Systems', 'Machine Vision Cameras', 'HMI & Panel PCs']
 };
 
-const last =[
+const last = [
    "Initialize Request",
    "Initialize Request",
    " REQUEST KIT PRICING",
    "Initialize Request"
-]
+];
 
-// --- OPTIMIZED SUB-COMPONENTS (Memoized to prevent Lag) ---
+// --- OPTIMIZED SUB-COMPONENTS ---
 
 const ServiceCardHorizontal: React.FC<{ service: any; index: number }> = React.memo(({ service, index }) => {
   // @ts-ignore
@@ -88,19 +89,9 @@ const ServiceCardHorizontal: React.FC<{ service: any; index: number }> = React.m
                </div>
             </Link>
             <Activity className="w-5 h-5 text-slate-700 group-hover:text-green-500 transition-colors" />
-            
          </div>
-
-        
-
-
-              
-
-
       </div>
-      
     </div>
-    
   );
 });
 
@@ -132,8 +123,8 @@ const ProcessStep: React.FC<{ number: string; title: string; desc: string; icon:
 const Services: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // --- FRAMER MOTION VARIANTS ---
-  const heroContainerVariants = {
+  // --- FRAMER MOTION VARIANTS (FIXED TYPES) ---
+  const heroContainerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -144,7 +135,7 @@ const Services: React.FC = () => {
     }
   };
 
-  const heroItemVariants = {
+  const heroItemVariants: Variants = {
     hidden: { y: 40, opacity: 0 },
     visible: {
       y: 0,
@@ -161,28 +152,27 @@ const Services: React.FC = () => {
   return (
     <div ref={containerRef} className="bg-[#020005] min-h-screen pt-32 pb-20 px-4 relative overflow-hidden">
       
-      {/* Ambient Background */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-amber-900/10 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-900/10 blur-[120px] rounded-full pointer-events-none" />
       
-      {/* HERO SECTION (Animated with Framer Motion) */}
+      {/* HERO SECTION */}
       <motion.div 
         className="max-w-7xl mx-auto mb-24 text-center relative z-10"
         initial="hidden"
-        whileInView="visible" // Runs when scrolled into view
-        viewport={{ once: true, margin: "-100px" }} // Runs once
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
         variants={heroContainerVariants}
       >
-         <motion.div variants={heroItemVariants}>
+          <motion.div variants={heroItemVariants}>
             <SectionTitle title="Operational Excellence" subtitle="Our Expertise" />
-         </motion.div>
-         
-         <motion.p 
+          </motion.div>
+          
+          <motion.p 
             variants={heroItemVariants}
             className="max-w-2xl mx-auto text-slate-400 text-lg leading-relaxed font-['Space_Grotesk']"
-         >
+          >
             We deliver end-to-end supply chain solutions tailored for the high-stakes electronics industry. Precision, speed, and reliability are engineered into every service we offer.
-         </motion.p>
+          </motion.p>
       </motion.div>
 
       {/* HORIZONTAL CARD LIST */}
@@ -191,14 +181,15 @@ const Services: React.FC = () => {
           <ServiceCardHorizontal key={service.id} service={service} index={index} />
         ))}
 
-<div className="inline-flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 max-w-2xl">
-  <span className="px-2 py-0.5 rounded bg-amber-500 text-black text-[10px] font-black uppercase">
-    Note
-  </span>
-  <p className="text-slate-200 text-sm md:text-base">
-    <strong className="text-amber-500">Shortage Specialists:</strong> We locate hard-to-find connectors and contacts when authorized channels quote 12+ weeks.
-  </p>
-</div>
+        {/* SPECIAL NOTE */}
+        <div className="inline-flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 max-w-2xl">
+          <span className="px-2 py-0.5 rounded bg-amber-500 text-black text-[10px] font-black uppercase">
+            Note
+          </span>
+          <p className="text-slate-200 text-sm md:text-base">
+            <strong className="text-amber-500">Shortage Specialists:</strong> We locate hard-to-find connectors and contacts when authorized channels quote 12+ weeks.
+          </p>
+        </div>
       </div>
 
       {/* PROCESS SECTION */}
@@ -236,19 +227,10 @@ const Services: React.FC = () => {
       {/* FINAL CTA */}
       <div className="mt-24 max-w-6xl mx-auto px-4 relative z-20">
         <div className="relative group w-full overflow-hidden rounded-[3rem] border border-white/10 bg-[#080808] transition-all duration-500 hover:border-white/20 hover:shadow-[0_0_60px_-15px_rgba(147,51,234,0.15)]">
-            
-            {/* Animated Grid Background */}
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-50 group-hover:opacity-100 transition-opacity duration-700" />
-            
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-1/2 bg-purple-500/10 blur-[100px] rounded-full group-hover:bg-purple-500/20 transition-colors duration-700" />
             
-            <div className="absolute top-6 left-8 w-4 h-4 border-l-2 border-t-2 border-slate-600 opacity-50 group-hover:border-amber-500 group-hover:opacity-100 transition-all duration-500" />
-            <div className="absolute top-6 right-8 w-4 h-4 border-r-2 border-t-2 border-slate-600 opacity-50 group-hover:border-purple-500 group-hover:opacity-100 transition-all duration-500" />
-            <div className="absolute bottom-6 left-8 w-4 h-4 border-l-2 border-b-2 border-slate-600 opacity-50 group-hover:border-purple-500 group-hover:opacity-100 transition-all duration-500" />
-            <div className="absolute bottom-6 right-8 w-4 h-4 border-r-2 border-b-2 border-slate-600 opacity-50 group-hover:border-amber-500 group-hover:opacity-100 transition-all duration-500" />
-            
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10 p-10 md:p-20">
-                
                 <div className="flex-1 text-center md:text-left">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-6">
                         <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_#22c55e]" />
@@ -256,17 +238,14 @@ const Services: React.FC = () => {
                     </div>
 
                     <h3 className="text-4xl md:text-6xl font-bold text-white font-['Syne'] leading-tight mb-6">
-                    Can't Find <br />
+                        Can't Find <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-white to-amber-400 animate-gradient-x">
-                        Critical Parts?
+                            Critical Parts?
                         </span>
                     </h3>
                     
                     <p className="text-slate-400 text-lg leading-relaxed max-w-xl">
-                    Standard catalogs don't cover every edge case. When authorized
-channels quote 12-week+ lead times, our global procurement team
-activates. We track down allocated, obsolete, and hard-to-find
-components to keep your production line running.
+                        Standard catalogs don't cover every edge case. When authorized channels quote 12-week+ lead times, our procurement team tracks down obsolete and hard-to-find parts.
                     </p>
                 </div>
 
@@ -274,8 +253,8 @@ components to keep your production line running.
                     <div className="relative w-32 h-32 flex items-center justify-center">
                         <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-amber-500/20 rounded-2xl rotate-6 group-hover:rotate-12 transition-transform duration-700 blur-xl" />
                         <div className="relative w-full h-full bg-[#151515] border border-white/20 rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-105 transition-transform duration-500">
-                           <img src="/logo.png" alt="korden Logo" className="w-10 h-14 group-hover:text-amber-500 transition-colors duration-500" />
-                            <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-red-500 rounded-full animate-ping" />
+                           <img src="/logo.png" alt="korden Logo" className="w-10 h-14" />
+                           <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-red-500 rounded-full animate-ping" />
                         </div>
                     </div>
 
@@ -289,11 +268,9 @@ components to keep your production line running.
                         </button>
                     </Link>
                 </div>
-
             </div>
         </div>
       </div>
-
     </div>
   );
 };
